@@ -1,6 +1,7 @@
 // Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+// FLUTTER_NOLINT
 
 #include "flutter/lib/ui/painting/path.h"
 
@@ -8,6 +9,7 @@
 #include <math.h>
 
 #include "flutter/lib/ui/painting/matrix.h"
+#include "flutter/lib/ui/ui_dart_state.h"
 #include "third_party/tonic/converter/dart_converter.h"
 #include "third_party/tonic/dart_args.h"
 #include "third_party/tonic/dart_binding_macros.h"
@@ -20,6 +22,7 @@ namespace flutter {
 typedef CanvasPath Path;
 
 static void Path_constructor(Dart_NativeArguments args) {
+  UIDartState::ThrowIfUIOperationsProhibited();
   DartCallConstructor(&CanvasPath::CreateNew, args);
 }
 
@@ -293,6 +296,13 @@ void CanvasPath::clone(Dart_Handle path_handle) {
   // per Skia docs, this will create a fast copy
   // data is shared until the source path or dest path are mutated
   path->path_ = path_;
+}
+
+// This is doomed to be called too early, since Paths are mutable.
+// However, it can help for some of the clone/shift/transform type methods
+// where the resultant path will initially have a meaningful size.
+size_t CanvasPath::GetAllocationSize() const {
+  return sizeof(CanvasPath) + path_.approximateBytesUsed();
 }
 
 }  // namespace flutter

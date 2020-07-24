@@ -1,6 +1,7 @@
 // Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+// FLUTTER_NOLINT
 
 #include "flutter/flow/layers/layer_tree.h"
 
@@ -61,7 +62,7 @@ bool LayerTree::Preroll(CompositorContext::ScopedFrame& frame,
   return context.surface_needs_readback;
 }
 
-#if defined(OS_FUCHSIA)
+#if defined(LEGACY_FUCHSIA_EMBEDDER)
 void LayerTree::UpdateScene(SceneUpdateContext& context,
                             scenic::ContainerNode& container) {
   TRACE_EVENT0("flutter", "LayerTree::UpdateScene");

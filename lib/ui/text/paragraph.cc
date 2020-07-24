@@ -1,6 +1,7 @@
 // Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+// FLUTTER_NOLINT
 
 #include "flutter/lib/ui/text/paragraph.h"
 
@@ -44,7 +45,7 @@ Paragraph::Paragraph(std::unique_ptr<txt::Paragraph> paragraph)
 
 Paragraph::~Paragraph() = default;
 
-size_t Paragraph::GetAllocationSize() {
+size_t Paragraph::GetAllocationSize() const {
   // We don't have an accurate accounting of the paragraph's memory consumption,
   // so return a fixed size to indicate that its impact is more than the size
   // of the Paragraph class.

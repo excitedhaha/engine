@@ -1,6 +1,7 @@
 // Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+// FLUTTER_NOLINT
 
 #define FML_USED_ON_EMBEDDER
 
@@ -28,12 +29,15 @@ void RasterThreadMerger::MergeWithLease(size_t lease_term) {
   }
 }
 
-bool RasterThreadMerger::IsOnRasterizingThread() {
-  const auto current_queue_id = MessageLoop::GetCurrentTaskQueueId();
+bool RasterThreadMerger::IsOnPlatformThread() const {
+  return MessageLoop::GetCurrentTaskQueueId() == platform_queue_id_;
+}
+
+bool RasterThreadMerger::IsOnRasterizingThread() const {
   if (is_merged_) {
-    return current_queue_id == platform_queue_id_;
+    return IsOnPlatformThread();
   } else {
-    return current_queue_id == gpu_queue_id_;
+    return !IsOnPlatformThread();
   }
 }
 

@@ -1,6 +1,7 @@
 // Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+// FLUTTER_NOLINT
 
 #include "flutter/shell/common/platform_view.h"
 
@@ -135,6 +136,14 @@ void PlatformView::SetNextFrameCallback(const fml::closure& closure) {
   }
 
   delegate_.OnPlatformViewSetNextFrameCallback(closure);
+}
+
+std::unique_ptr<std::vector<std::string>>
+PlatformView::ComputePlatformResolvedLocales(
+    const std::vector<std::string>& supported_locale_data) {
+  std::unique_ptr<std::vector<std::string>> out =
+      std::make_unique<std::vector<std::string>>();
+  return out;
 }
 
 }  // namespace flutter

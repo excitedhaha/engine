@@ -1,6 +1,7 @@
 // Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+// FLUTTER_NOLINT
 
 #include "flutter/lib/ui/text/font_collection.h"
 
@@ -39,6 +40,7 @@ void LoadFontFromList(tonic::Uint8List& font_data,
 }
 
 void _LoadFontFromList(Dart_NativeArguments args) {
+  UIDartState::ThrowIfUIOperationsProhibited();
   tonic::DartCallStatic(LoadFontFromList, args);
 }
 
@@ -46,8 +48,6 @@ void _LoadFontFromList(Dart_NativeArguments args) {
 
 FontCollection::FontCollection()
     : collection_(std::make_shared<txt::FontCollection>()) {
-  collection_->SetupDefaultFontManager();
-
   dynamic_font_manager_ = sk_make_sp<txt::DynamicFontManager>();
   collection_->SetDynamicFontManager(dynamic_font_manager_);
 }
@@ -65,6 +65,10 @@ void FontCollection::RegisterNatives(tonic::DartLibraryNatives* natives) {
 
 std::shared_ptr<txt::FontCollection> FontCollection::GetFontCollection() const {
   return collection_;
+}
+
+void FontCollection::SetupDefaultFontManager() {
+  collection_->SetupDefaultFontManager();
 }
 
 void FontCollection::RegisterFonts(

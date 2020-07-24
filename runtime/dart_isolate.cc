@@ -1,6 +1,7 @@
 // Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+// FLUTTER_NOLINT
 
 #include "flutter/runtime/dart_isolate.h"
 
@@ -136,8 +137,9 @@ DartIsolate::DartIsolate(const Settings& settings,
                   advisory_script_entrypoint,
                   settings.log_tag,
                   settings.unhandled_exception_callback,
-                  DartVMRef::GetIsolateNameServer()),
-      is_root_isolate_(is_root_isolate) {
+                  DartVMRef::GetIsolateNameServer(),
+                  is_root_isolate),
+      disable_http_(settings.disable_http) {
   phase_ = Phase::Uninitialized;
 }
 
@@ -261,9 +263,9 @@ bool DartIsolate::LoadLibraries() {
 
   tonic::DartState::Scope scope(this);
 
-  DartIO::InitForIsolate();
+  DartIO::InitForIsolate(disable_http_);
 
-  DartUI::InitForIsolate(IsRootIsolate());
+  DartUI::InitForIsolate();
 
   const bool is_service_isolate = Dart_IsServiceIsolate(isolate());
 

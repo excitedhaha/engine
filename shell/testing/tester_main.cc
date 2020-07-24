@@ -1,6 +1,7 @@
 // Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+// FLUTTER_NOLINT
 
 #define FML_USED_ON_EMBEDDER
 
@@ -139,7 +140,8 @@ int RunTester(const flutter::Settings& settings,
       };
 
   Shell::CreateCallback<Rasterizer> on_create_rasterizer = [](Shell& shell) {
-    return std::make_unique<Rasterizer>(shell, shell.GetTaskRunners());
+    return std::make_unique<Rasterizer>(shell, shell.GetTaskRunners(),
+                                        shell.GetIsGpuDisabledSyncSwitch());
   };
 
   auto shell = Shell::Create(task_runners,             //
