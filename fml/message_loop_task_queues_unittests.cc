@@ -1,7 +1,6 @@
 // Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-// FLUTTER_NOLINT
 
 #define FML_USED_ON_EMBEDDER
 
@@ -16,7 +15,7 @@ class TestWakeable : public fml::Wakeable {
  public:
   using WakeUpCall = std::function<void(const fml::TimePoint)>;
 
-  TestWakeable(WakeUpCall call) : wake_up_call_(call) {}
+  explicit TestWakeable(WakeUpCall call) : wake_up_call_(call) {}
 
   void WakeUp(fml::TimePoint time_point) override { wake_up_call_(time_point); }
 
@@ -174,6 +173,13 @@ TEST(MessageLoopTaskQueue, NotifyObserversWhileCreatingQueues) {
   before_second_observer.Signal();
   notify_observers.join();
 }
+
+TEST(MessageLoopTaskQueue, QueueDoNotOwnItself) {
+  auto task_queue = fml::MessageLoopTaskQueues::GetInstance();
+  auto queue_id = task_queue->CreateTaskQueue();
+  ASSERT_FALSE(task_queue->Owns(queue_id, queue_id));
+}
+
 // TODO(chunhtai): This unit-test is flaky and sometimes fails asynchronizely
 // after the test has finished.
 // https://github.com/flutter/flutter/issues/43858
